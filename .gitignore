@@ -1,0 +1,11 @@
+*.py[cod]
+__pycache__
+.idea/
+bin
+include
+lib*
+man
+pip-selfcheck.json
+pyvenv.cfg
+share/
+AutoOpt.egg-info
