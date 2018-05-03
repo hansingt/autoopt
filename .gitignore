@@ -3,3 +3,5 @@ __pycache__
 .idea/
 AutoOpt.egg-info
 venv/
+.coverage
+.pytest_cache/

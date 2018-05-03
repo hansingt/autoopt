@@ -2,15 +2,15 @@ import unittest
 from autoopt.distributions.base import Distribution
 
 
-class TestDistribution(Distribution):
+class MyDistribution(Distribution):
     def plot(self):
-        return super(TestDistribution, self).plot()
+        return super(MyDistribution, self).plot()
 
 
 class DistributionTestCase(unittest.TestCase):
     def setUp(self):
         self.name = "test"
-        self.dist = TestDistribution(parameter_name=self.name)
+        self.dist = MyDistribution(parameter_name=self.name)
 
     def test_name(self):
         self.assertEqual(self.name, self.dist.name)
@@ -26,18 +26,18 @@ class DistributionTestCase(unittest.TestCase):
         def fuu(test):
             pass
         self.dist(fuu)
-        dist2 = TestDistribution(parameter_name=self.name)
+        dist2 = MyDistribution(parameter_name=self.name)
         dist2(fuu)
         parameters = getattr(fuu, Distribution.PARAMETER_CLASS_ATTRIBUTE)
         self.assertIsNot(parameters[self.name], self.dist)
         self.assertIs(parameters[self.name], dist2)
 
     def test_eq(self):
-        dist2 = TestDistribution(parameter_name=self.name)
+        dist2 = MyDistribution(parameter_name=self.name)
         self.assertEqual(self.dist, dist2)
 
     def test_ne(self):
-        dist2 = TestDistribution(parameter_name=self.name + "fuu")
+        dist2 = MyDistribution(parameter_name=self.name + "fuu")
         self.assertNotEqual(self.dist, dist2)
 
     def test_eq_not_comparable(self):
@@ -47,7 +47,7 @@ class DistributionTestCase(unittest.TestCase):
         self.assertEqual(self.name, str(self.dist))
 
     def test_repr(self):
-        check = "{cls}<{name}>".format(cls=TestDistribution.__name__, name=self.name)
+        check = "{cls}<{name}>".format(cls=MyDistribution.__name__, name=self.name)
         self.assertEqual(check, repr(self.dist))
 
     def test_plot(self):
