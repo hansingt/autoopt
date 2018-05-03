@@ -2,6 +2,6 @@ language: python
 python:
   - "3.6"
 install:
-  - pip install hyerpopt numpy matplotlib pytest pytest-cov
+  - pip install -r requirements.txt
 scripts:
   - pytest --cov autoopt
