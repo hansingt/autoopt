@@ -4,5 +4,8 @@ python:
 cache: pip
 install:
   - pip install -r requirements.txt
+  - pip install python-coveralls
 script:
-  - pytest --cov autoopt
+  - pytest --cov autoopt --cov-report term-missing
+after_success:
+  - coveralls
