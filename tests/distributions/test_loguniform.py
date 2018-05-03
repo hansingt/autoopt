@@ -86,10 +86,13 @@ class QLogUniformTestCase(unittest.TestCase):
     def test_plot(self):
         max_value = random.randint(2, 10)
         min_value = random.randint(1, max_value - 1)
-        dist = QLogUniform("test", min_value=min_value, max_value=max_value, q=1)
-        plot = dist.plot()
         try:
+            import matplotlib
+            matplotlib.use("AGG")
             from matplotlib import pyplot as plt
+            plt.ioff()
+            dist = QLogUniform("test", min_value=min_value, max_value=max_value, q=1)
+            plot = dist.plot()
             self.assertIsInstance(plot, plt.figure().__class__)
         except ImportError:
             self.assertIsNone(plot)

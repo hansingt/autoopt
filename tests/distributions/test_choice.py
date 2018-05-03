@@ -31,9 +31,12 @@ class WeightedChoiceTestCase(unittest.TestCase):
         self.assertEqual(self.dist.pdf("__not_in_set__"), 0.0)
 
     def test_plot(self):
-        plot = self.dist.plot()
         try:
+            import matplotlib
+            matplotlib.use("AGG")
             from matplotlib import pyplot as plt
+            plt.ioff()
+            plot = self.dist.plot()
             self.assertIsInstance(plot, plt.figure().__class__)
         except ImportError:
             self.assertIsNone(plot)
