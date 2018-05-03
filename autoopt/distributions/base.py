@@ -23,7 +23,6 @@ is installed. This plots the PDF (probability density function).
 """
 import abc
 import copy
-import logging
 import numpy
 
 
@@ -45,83 +44,25 @@ class Distribution(object, metaclass=abc.ABCMeta):
     def name(self):
         return self._name
 
+    @abc.abstractmethod
     def plot(self):
-        try:
-            from matplotlib import pyplot as plt
-        except ImportError:
-            logging.getLogger().error("Error importing the matplotlib. "
-                                      "Did you forget to install the 'plotting' extra?")
-            return None
-        figure = plt.figure()
-        plt.ylabel("PDF(X)")
-        plt.xlabel("X")
-        figure.suptitle("Distribution for parameter {self.name!s}".format(self=self))
-        # plot at least 1.000 points, 10.000 at most
-        num_points = min(max(self._plot_end - self._plot_start, 1000), 10000)
-        x = numpy.linspace(start=self._plot_start, stop=self._plot_end, num=num_points)
-        y = numpy.vectorize(self.pdf)(x)
-        axes = plt.plot(x, y)
-        mean_x = self.mean()
-        mean_y = self.pdf(mean_x)
-        y_max = 1.0 / (plt.ylim()[1] - plt.ylim()[0]) * (mean_y - plt.ylim()[0])
-        plt.axvline(x=mean_x, ymax=y_max, linestyle="--", color=axes[0].get_color(),
-                    label="Mean: %g" % mean_x)
-        plt.legend(loc="best", fancybox=True, framealpha=0.2).draggable(True)
-        return figure
-
-    @abc.abstractmethod
-    def pdf(self, x):
-        """
-        Calculate the probability for the given `x` to be chosen.
-
-        :param x: The value to calculate the probability for.
-        :return: The probability that the given value `x` gets sampled.
-        :rtype: float
-        """
         raise NotImplementedError("Has to be implemented by the subclasses")
-
-    @abc.abstractmethod
-    def mean(self):
-        """
-        Calculates the mean values of the distribution.
-
-        :return: The mean value of the given distribution.
-        :rtype: float
-        """
-        raise NotImplementedError("Has to be implemented by the subclasses")
-
-    @property
-    @abc.abstractmethod
-    def _plot_start(self):
-        return 0
-
-    @property
-    @abc.abstractmethod
-    def _plot_end(self):
-        return 1
 
     def __call__(self, obj):
         if not hasattr(obj, self.PARAMETER_CLASS_ATTRIBUTE):
-            setattr(obj, self.PARAMETER_CLASS_ATTRIBUTE, set())
+            setattr(obj, self.PARAMETER_CLASS_ATTRIBUTE, dict())
         # Copy the attribute to avoid overwriting inherited parameters.
         parameters = copy.copy(getattr(obj, self.PARAMETER_CLASS_ATTRIBUTE))
-        if self in parameters:
-            parameters.remove(self.name)
-        parameters.add(self)
+        parameters[self.name] = self
         setattr(obj, self.PARAMETER_CLASS_ATTRIBUTE, parameters)
 
     def __eq__(self, other):
         if hasattr(other, "name"):
             return self.name == other.name
-        elif isinstance(other, str):
-            return self.name == other
         return False
 
     def __ne__(self, other):
         return not self == other
-
-    def __hash__(self):
-        return hash(self.name)
 
     def __str__(self):
         return self.name
