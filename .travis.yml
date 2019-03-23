@@ -3,9 +3,9 @@ python:
   - "3.6"
 cache: pip
 install:
-  - pip install -r requirements.txt
-  - pip install python-coveralls
+  - pip install pipenv python-coveralls
+  - pipenv install --ignore-pipfile
 script:
-  - pytest --cov autoopt --cov-report term-missing
+  - pipenv run pytest --cov autoopt --cov-report term-missing
 after_success:
   - coveralls

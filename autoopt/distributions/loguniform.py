@@ -70,7 +70,8 @@ class LogUniform(Uniform):
         y_max = 1.0 / (plt.ylim()[1] - plt.ylim()[0]) * (mean_y - plt.ylim()[0])
         plt.axvline(x=mean_x, ymax=y_max, linestyle="--", color=axes[0].get_color(),
                     label="Mean: %g" % mean_x)
-        plt.legend(loc="best", fancybox=True, framealpha=0.2).draggable(True)
+        legend = plt.legend(loc="best", fancybox=True, framealpha=0.2)
+        legend.set_draggable(True)
         return figure
 
 
@@ -126,6 +127,7 @@ class QLogUniform(LogUniform, QMixin):
         y_max = 1.0 / (plt.ylim()[1] - plt.ylim()[0]) * (mean_y - plt.ylim()[0])
         plt.axvline(x=mean_x, ymax=y_max, linestyle="--", color=axes[0].get_color(),
                     label="Mean: %g" % mean_x)
-        plt.legend(loc="best", fancybox=True, framealpha=0.2).draggable(True)
+        legend = plt.legend(loc="best", fancybox=True, framealpha=0.2)
+        legend.set_draggable(True)
         return figure
 

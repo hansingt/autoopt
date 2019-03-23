@@ -1,7 +1,15 @@
+# Python Files
 *.py[cod]
 __pycache__
-.idea/
-AutoOpt.egg-info
-venv/
-.coverage
+
+# Distribution files
+*.egg-info
+dist/*
+
+# Coverage and test files
+.coverage*
 .pytest_cache/
+htmlcov/
+
+# PyCharm IDE
+.idea/*

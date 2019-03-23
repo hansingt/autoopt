@@ -3,10 +3,10 @@ from setuptools import setup, find_packages
 setup(
     name="AutoOpt",
     version="0.1",
-    requires=["hyperopt", "numpy"],
+    requires=["numpy"],
+    tests_require=["pytest"],
     description="Framework to automatically find and optimize the best processing pipeline for a given dataset",
     author="Torben Hansing",
-    author_email="torbenhansing@gmail.com",
     url="https://github.com/hansa064/autoopt",
     packages=["autoopt"],
     platforms="any",
