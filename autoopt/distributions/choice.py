@@ -69,7 +69,7 @@ class WeightedChoice(Distribution):
     def plot(self):
         try:
             from matplotlib import pyplot as plt
-        except ImportError:
+        except ImportError:  # pragma: no cover
             logging.getLogger().error("Error importing the matplotlib. "
                                       "Did you forget to install the 'plotting' extra?")
             return None
