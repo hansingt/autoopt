@@ -4,7 +4,7 @@ python:
 cache: pip
 install:
   - pip install pipenv python-coveralls
-  - pipenv install --ignore-pipfile
+  - PIPENV_VERBOSITY=-1 pipenv install --ignore-pipfile
 script:
   - pipenv run pytest --cov autoopt --cov-report term-missing
 after_success:
