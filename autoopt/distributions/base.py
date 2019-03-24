@@ -96,6 +96,8 @@ class QMixin(object):
         This is required for the plotting only.
 
         :param value: The value to round
-        :type value: float
+        :type value: float | numpy.ndarray
+        :return: The quantized value which is the nearest multiple of q
+        :rtype: float | numpy.ndarray
         """
         return numpy.round(value / self.q) * self.q

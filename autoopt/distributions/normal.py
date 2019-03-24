@@ -42,6 +42,9 @@ class Normal(Distribution):
     def scale(self):
         return self.__scale
 
+    def mean(self):
+        return self.loc
+
     def pdf(self, x):
         """
         Calculate the probability for the given `x` to be sampled.
@@ -51,7 +54,7 @@ class Normal(Distribution):
         :return: The probability that the given value is sampled.
         :rtype: float | np.ndarray
         """
-        return 1. / np.sqrt(2 * np.pi * self.scale ** 2) * np.exp(- (x - self.loc) ** 2 / (2 * self.scale ** 2))
+        return np.exp(-(x - self.loc) ** 2 / (2 * self.scale ** 2)) / (np.sqrt(2 * np.pi) * self.scale)
 
     def plot(self):
         try:
@@ -60,9 +63,9 @@ class Normal(Distribution):
             logging.getLogger().error("Error importing the matplotlib. "
                                       "Did you forget to install the 'plotting' extra?")
             return None
-        # 2 * scale ~ 96% of the values
-        start = self.loc - 3 * self.scale
-        stop = self.loc + 3 * self.scale
+        # 3 * scale ~ 99% of the values
+        start = self.mean() - 3 * self.scale
+        stop = self.mean() + 3 * self.scale
         figure = plt.figure()
         plt.ylabel("PDF(X)")
         plt.xlabel("X")
@@ -72,7 +75,7 @@ class Normal(Distribution):
         x = np.linspace(start=start, stop=stop, num=num_points)
         y = self.pdf(x)
         axes = plt.plot(x, y, label="loc={self.loc:g}, scale={self.scale:g}".format(self=self))
-        mean_x = self.loc
+        mean_x = self.mean()
         mean_y = self.pdf(mean_x)
         y_max = 1.0 / (plt.ylim()[1] - plt.ylim()[0]) * (mean_y - plt.ylim()[0])
         plt.axvline(x=mean_x, ymax=y_max, linestyle="--", color=axes[0].get_color(),
