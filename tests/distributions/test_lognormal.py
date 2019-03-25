@@ -31,8 +31,15 @@ def test_pdf():
     loc = 0
     scale = 1.0
     dist = create_dist(loc=loc, scale=scale)
+
+    def check_pdf(x_):
+        if x_ <= 0:
+            return 0.0
+        else:
+            return 1. / (np.sqrt(2 * np.pi) * scale * x_) * np.exp(-(np.log(x_) - loc) ** 2 / (2 * scale ** 2))
+
     x = np.linspace(start=dist.mean() - 2 * scale, stop=dist.mean() + 2 * scale, num=1000)
-    y = np.where(x > 0, 1. / (np.sqrt(2 * np.pi) * scale * x) * np.exp(- (np.log(x) - loc) ** 2 / (2 * scale ** 2)), np.zeros(x.shape))
+    y = np.vectorize(check_pdf)(x)
     assert np.allclose(y, dist.pdf(x))
 
 

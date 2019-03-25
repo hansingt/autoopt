@@ -47,7 +47,7 @@ class LogNormal(Normal):
         :return: The probability that the given value is sampled.
         :rtype: np.ndarray
         """
-        return np.where(x > 0, super(LogNormal, self).pdf(np.log(x)) / x, np.zeros(x.shape))
+        return np.vectorize(lambda x_: super(LogNormal, self).pdf(np.log(x_)) / x_ if x_ > 0 else 0.0)(x)
 
 
 class QLogNormal(LogNormal, QMixin):
