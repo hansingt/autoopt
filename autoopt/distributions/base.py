@@ -55,11 +55,15 @@ class Distribution(object, metaclass=abc.ABCMeta):
         parameters = copy.copy(getattr(obj, self.PARAMETER_CLASS_ATTRIBUTE))
         parameters[self.name] = self
         setattr(obj, self.PARAMETER_CLASS_ATTRIBUTE, parameters)
+        return obj
 
     def __eq__(self, other):
         if hasattr(other, "name"):
             return self.name == other.name
         return False
+
+    def __hash__(self):
+        return hash(self.name)
 
     def __ne__(self, other):
         return not self == other
