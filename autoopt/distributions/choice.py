@@ -18,34 +18,28 @@ class WeightedChoice(Distribution):
     This parameter will sample each of the given
     choices according to the given weight.
 
-    >>> @WeightedChoice("test", choices={"A": 0.5, "B": 0.25, "C": 0.25})
-    ... def fun(test):
-    ...     pass
+    ..code:: python
 
-    The weight does not have to be a probability, but can be any number.
+        WeightedChoice(choices={"A": 0.5, "B": 0.25, "C": 0.25})
+
+    The weights do not have to be a probabilities, but can be any number.
     The proportions of the weights define the probabilities.
     Thus, the definition "{'a': 1, 'b': 100}" defines, that it
     is 100 times more likely to choose 'b' than to choose 'a'.
     """
 
-    def __init__(self, parameter_name, choices):
+    def __init__(self, choices: dict):
         """
         Create a new probability choice parameter
-        with `parameter_name` as name and `choices`
-        as the possible values.
-        Each choice must be a tuple containing first
-        the probability in range from 0 to 1 for that
-        choice and the value to choose as a second argument.
-        The probabilities of all choices need to sum up to 1.
+        with `choices` as the possible values.
+        The choices must be a dictionary containing the choice as key and
+        the weight value.
 
-        :param parameter_name: The name of the parameter to create.
-        :type parameter_name: str
-        :param choices: A dictionary of tuples containing the value
+        :param choices: A dictionary containing the value
                         of each choice as keys and the corresponding
-                        probabilities as values.
+                        weight as values.
         :type choices: dict[object, float]
         """
-        super(WeightedChoice, self).__init__(parameter_name)
         self.__choices = choices
         self.__weight_sum = sum(choices.values())
 
@@ -60,7 +54,12 @@ class WeightedChoice(Distribution):
         """
         return self.__choices.copy()
 
-    def pdf(self, x):
+    def mean(self):
+        probabilities = [weight / self.__weight_sum for weight in self.__choices.values()]
+        average = sum([i * prob for i, prob in enumerate(probabilities)])
+        return list(self.__choices.keys())[int(round(average))]
+
+    def pdf(self, x: object):
         if x not in self.__choices:
             return 0.0
         else:
@@ -76,7 +75,6 @@ class WeightedChoice(Distribution):
         figure = plt.figure()
         plt.ylabel("PDF(X)")
         plt.xlabel("X")
-        figure.suptitle("Probability choice distribution for parameter {self.name!s}".format(self=self))
         x = range(0, len(self.__choices))
         y = [self.pdf(c) for c in self.__choices.keys()]
         plt.bar(x=x, height=y, tick_label=[str(c) for c in self.__choices.keys()])
@@ -85,36 +83,20 @@ class WeightedChoice(Distribution):
 
 class Choice(WeightedChoice):
     """
-    Defines a parameter as to be chosen from
-    the given set of options.
-    This parameter will be then chosen from this
-    set during the optimization.
+    Defines a parameter as to be chosen from the given set of options.
+    This parameter will be then chosen from this set during the optimization.
+    Every choice has the same probability to be chosen.
 
-    >>> @Choice("test", choices=["A", "B", "C"])
-    ... def fun(test):
-    ...     pass
+    .. code:: python
+
+        Choice(choices=["A", "B", "C"])
     """
 
-    def __init__(self, parameter_name, choices):
+    def __init__(self, choices: list):
         """
-        Create a new choice parameter with `parameter_name` as name
-        and `choices` as the possible values.
+        Create a new choice parameter with `choices` as the possible values.
 
-        :param parameter_name: The name of the parameter to create.
-        :type parameter_name: str
         :param choices: The possible values for this parameter.
-        :type choices: str | List[str]
+        :type choices: List[object]
         """
-        if not isinstance(choices, list):
-            choices = [choices]
-        super(Choice, self).__init__(parameter_name=parameter_name, choices={c: 1 for c in choices})
-
-    @property
-    def choices(self):
-        """
-        Returns the list of values to choose from
-
-        :return: A list of values.
-        :rtype: list[object]
-        """
-        return super(Choice, self).choices.keys()
+        super(Choice, self).__init__(choices={c: 1 for c in choices})

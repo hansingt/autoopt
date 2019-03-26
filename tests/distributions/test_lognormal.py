@@ -12,7 +12,7 @@ from autoopt.distributions import LogNormal
 def create_dist(loc=None, scale=None):
     loc = loc if loc is not None else 0
     scale = scale if scale is not None else 1
-    return LogNormal("test", loc=loc, scale=scale)
+    return LogNormal(loc=loc, scale=scale)
 
 
 def test_loc():
@@ -40,7 +40,7 @@ def test_pdf():
 
     x = np.linspace(start=dist.mean() - 2 * scale, stop=dist.mean() + 2 * scale, num=1000)
     y = np.vectorize(check_pdf)(x)
-    assert np.allclose(y, dist.pdf(x))
+    assert np.allclose(y, np.vectorize(dist.pdf)(x))
 
 
 def test_plot():

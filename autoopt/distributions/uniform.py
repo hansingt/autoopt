@@ -21,11 +21,10 @@ class Uniform(Distribution):
 
     P(X) = 1 / (max - min) if min <= X <= max else 0
     """
-    def __init__(self, parameter_name, min_value, max_value):
+    def __init__(self, min_value: float, max_value: float):
         if min_value >= max_value:
             raise ValueError("The minimum value has to be smaller than the maximum value %g >= %g" %
                              (min_value, max_value))
-        super(Uniform, self).__init__(parameter_name=parameter_name)
         self._min_value = min_value
         self._max_value = max_value
         self.__probability = 1 / (max_value - min_value)
@@ -38,23 +37,10 @@ class Uniform(Distribution):
     def max_value(self):
         return self._max_value
 
-    def pdf(self, x):
-        """
-        Calculate the probability for the given `x` to be chosen.
-
-        :param x: The value to calculate the probability for.
-        :return: The probability that the given value `x` gets sampled.
-        :rtype: float
-        """
+    def pdf(self, x: float):
         return self.__probability if self.min_value <= x <= self.max_value else 0
 
     def mean(self):
-        """
-        Calculates the mean values of the distribution.
-
-        :return: The mean value of the given distribution.
-        :rtype: float
-        """
         return 0.5 * (self.min_value + self.max_value)
 
     def plot(self):
@@ -69,9 +55,8 @@ class Uniform(Distribution):
         figure = plt.figure()
         plt.ylabel("PDF(X)")
         plt.xlabel("X")
-        figure.suptitle("Uniform distribution for parameter {self.name!s}".format(self=self))
         # plot at least 1.000 points, 10.000 at most
-        num_points = min(max(stop - start, 1000), 10000)
+        num_points = int(min(max(stop - start, 1000), 10000))
         x = np.linspace(start=start, stop=stop, num=num_points)
         y = np.vectorize(self.pdf)(x)
         axes = plt.plot(x, y, label="min={self.min_value:g}, max={self.max_value:g}".format(self=self))
@@ -92,11 +77,11 @@ class QUniform(Uniform, QMixin):
 
     P(X) = 1 / (max - min) if min <= round(X / q) <= max else 0
     """
-    def __init__(self, parameter_name, min_value, max_value, q):
-        super(QUniform, self).__init__(parameter_name=parameter_name, min_value=min_value, max_value=max_value)
+    def __init__(self, min_value: float, max_value: float, q: float):
+        super(QUniform, self).__init__(min_value=min_value, max_value=max_value)
         QMixin.__init__(self, q=q)
 
-    def pdf(self, x):
+    def pdf(self, x: float):
         return super(QUniform, self).pdf(self.round_to_q(x))
 
     def mean(self):
@@ -114,7 +99,6 @@ class QUniform(Uniform, QMixin):
         figure = plt.figure()
         plt.ylabel("PDF(X)")
         plt.xlabel("X")
-        figure.suptitle("Quantized uniform distribution for parameter {self.name!s}".format(self=self))
         # plot at least 1.000 points, 10.000 at most
         num_points = min(max(stop - start, 1000), 10000)
         x = np.linspace(start=start, stop=stop, num=num_points)

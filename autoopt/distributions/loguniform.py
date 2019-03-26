@@ -32,14 +32,14 @@ class LogUniform(Uniform):
 
         P(X) = 1 / (X * (log(max_value) - log(min_value)) if 0 <= X and min_value <= X <= max_value else 0
     """
-    def __init__(self, parameter_name, min_value, max_value):
+    def __init__(self, min_value: float, max_value: float):
         if min_value <= 0:
             raise ValueError("LogUniform distributions are only defined for positive intervals")
-        super(LogUniform, self).__init__(parameter_name=parameter_name, min_value=min_value, max_value=max_value)
+        super(LogUniform, self).__init__(min_value=min_value, max_value=max_value)
         self._min_log = np.log(min_value)
         self._max_log = np.log(max_value)
 
-    def pdf(self, x):
+    def pdf(self, x: float):
         if x >= 0 and self.min_value <= x <= self.max_value:
             return 1 / (x * (self._max_log - self._min_log))
         return 0.0
@@ -59,7 +59,6 @@ class LogUniform(Uniform):
         figure = plt.figure()
         plt.ylabel("PDF(X)")
         plt.xlabel("X")
-        figure.suptitle("Logarithmic uniform distribution for parameter {self.name!s}".format(self=self))
         # plot at least 1.000 points, 10.000 at most
         num_points = min(max(stop - start, 1000), 10000)
         x = np.linspace(start=start, stop=stop, num=num_points)
@@ -94,11 +93,11 @@ class QLogUniform(LogUniform, QMixin):
     This parameter is bound to [exp(min), exp(max)] and defined only for positive values.
     """
 
-    def __init__(self, parameter_name, min_value, max_value, q):
-        super(QLogUniform, self).__init__(parameter_name=parameter_name, min_value=min_value, max_value=max_value)
+    def __init__(self, min_value: float, max_value: float, q: float):
+        super(QLogUniform, self).__init__(min_value=min_value, max_value=max_value)
         QMixin.__init__(self, q=q)
 
-    def pdf(self, x):
+    def pdf(self, x: float):
         return super(QLogUniform, self).pdf(self.round_to_q(x))
 
     def mean(self):
@@ -116,7 +115,6 @@ class QLogUniform(LogUniform, QMixin):
         figure = plt.figure()
         plt.ylabel("PDF(X)")
         plt.xlabel("X")
-        figure.suptitle("Quantized logarithmic uniform distribution for parameter {self.name!s}".format(self=self))
         # plot at least 1.000 points, 10.000 at most
         num_points = min(max(stop - start, 1000), 10000)
         x = np.linspace(start=start, stop=stop, num=num_points)

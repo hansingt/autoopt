@@ -7,7 +7,6 @@ verify_ssl = true
 pytest = "*"
 pytest-cov = "*"
 coveralls = "*"
-autoopt-test-fixture = {editable = true,path = "./fixtures"}
 
 [packages]
 autoopt = {editable = true,extras = ["plotting"],path = "."}

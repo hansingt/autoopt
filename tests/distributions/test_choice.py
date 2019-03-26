@@ -1,3 +1,4 @@
+import numpy as np
 import random
 import unittest
 from autoopt.distributions import WeightedChoice, Choice
@@ -14,12 +15,19 @@ class WeightedChoiceTestCase(unittest.TestCase):
 
     def setUp(self):
         self.choices = self._create_choices()
-        self.dist = WeightedChoice(parameter_name="test", choices=self.choices)
+        self.dist = WeightedChoice(choices=self.choices)
 
     def test_choice(self):
         for name, weight in self.choices.items():
             self.assertIn(name, self.dist.choices)
             self.assertEqual(self.dist.choices[name], weight)
+
+    def test_mean(self):
+        weight_sum = sum(self.choices.values())
+        probabilities = [weight / weight_sum for weight in self.choices.values()]
+        average_index = sum([i * p for i, p in enumerate(probabilities)])
+        check = list(self.choices.keys())[int(round(average_index))]
+        assert check == self.dist.mean()
 
     def test_pdf(self):
         weight_sum = sum(self.choices.values())
@@ -39,19 +47,13 @@ class WeightedChoiceTestCase(unittest.TestCase):
             plot = self.dist.plot()
             self.assertIsInstance(plot, plt.figure().__class__)
         except ImportError:
-            self.assertIsNone(plot)
+            pass
 
 
 class ChoiceTestCase(unittest.TestCase):
 
     def test_choice(self):
         choices = ["a", "b", "c"]
-        dist = Choice(parameter_name="test", choices=choices)
+        dist = Choice(choices=choices)
         for name in choices:
             self.assertIn(name, dist.choices)
-
-    def test_single_choice(self):
-        choice = "fuu"
-        dist = Choice(parameter_name="test", choices=choice)
-        self.assertIn(choice, dist.choices)
-        self.assertEqual(len(dist.choices), 1)

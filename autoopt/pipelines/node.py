@@ -2,18 +2,13 @@
 # -*- coding: UTF-8 -*-
 # Author: Torben Hansing
 #
-import copy
-import inspect
+import abc
 import logging
 
-import pkg_resources
-
-from autoopt.distributions import Choice
 from autoopt.distributions.base import Distribution
-from autoopt.distributions.normal import Normal, QNormal
 
 
-class PipelineNode(object):
+class PipelineNode(object, metaclass=abc.ABCMeta):
 
     def __init__(self, node_name):
         """
@@ -34,48 +29,7 @@ class PipelineNode(object):
     def name(self):
         return self.__name
 
-    @property
-    def node_class(self):
-        if self.__class is None:
-            for node in pkg_resources.iter_entry_points("autoopt.nodes", self.name):
-                self.__class = node.load()
-                break
-            else:
-                raise ValueError("No class found for node name '%s'. Please check your installation.")
-        return self.__class
-
-    @property
-    def parameters(self):
-        if self.__parameters is None:
-            self.__parameters = set()
-            for class_ in inspect.getmro(self.node_class):
-                if class_ != object and hasattr(class_, "__init__"):
-                    argspec = inspect.getfullargspec(class_.__init__)
-                    if argspec.defaults is not None:
-                        default_args = zip(argspec.args[-len(argspec.defaults):], argspec.defaults)
-                        self.__parameters.update([arg for arg, default in default_args if arg != "self"])
-        return self.__parameters
-
-    @property
-    def optimization_parameters(self):
-        """
-        Returns the names of the parameters of this node.
-        If the class that implements this node defines it's hyper parameters, these will be used as
-        optimization parameters. Otherwise every parameter of the node's __init__ method that has a default value
-        is considered as a parameter of the node. In this case, the optimization parameters are the same as the
-        `parameters`.
-
-        :return: A list of the parameters of this node.
-        :rtype: list[str]
-        """
-        if self.__optimization_parameters is None:
-            if not hasattr(self.node_class, Distribution.PARAMETER_CLASS_ATTRIBUTE):
-                self.__optimization_parameters = self.parameters
-            else:
-                self.__optimization_parameters = set([name for name in
-                                                      getattr(self.node_class, Distribution.PARAMETER_CLASS_ATTRIBUTE)])
-        return self.__optimization_parameters
-
+    @abc.abstractmethod
     def parameter_space(self):
         """
         Returns a dictionary of all parameters of this node and their default values.
@@ -87,32 +41,7 @@ class PipelineNode(object):
         :return: A dictionary containing all parameters and their default values.
         :rtype: dict[str, Distribution]
         """
-        if not hasattr(self.node_class, Distribution.PARAMETER_CLASS_ATTRIBUTE):
-            # Return 1 for every parameter not set
-            space = set()
-            parameters = self.optimization_parameters
-            for class_ in inspect.getmro(self.node_class):
-                if class_ != object and hasattr(class_, "__init__"):
-                    argspec = inspect.getfullargspec(class_.__init__)
-                    if argspec.defaults is not None:
-                        default_args = zip(argspec.args[-len(argspec.defaults):], argspec.defaults)
-                        for param, default in default_args:
-                            if param in parameters:
-                                if isinstance(default, bool):
-                                    # Add a boolean choice
-                                    space.add(Choice(param, choices=[True, False]))
-                                elif isinstance(default, float):
-                                    # Add a normal distribution
-                                    space.add(Normal(param, loc=default, scale=1.0))
-                                elif isinstance(default, int):
-                                    # Add a Q-Normal distribution
-                                    space.add(QNormal(param, loc=default, scale=1.0, q=1))
-                                else:
-                                    space.add(Choice(param, choices=[default]))
-        else:
-            space = getattr(self.node_class, Distribution.PARAMETER_CLASS_ATTRIBUTE).values()
-        # Create a dictionary containing the optimization name as a key
-        return {self._make_parameter_name(parameter.name): parameter for parameter in space}
+        raise NotImplementedError("Has to be implemented by subclasses")
 
     def _make_parameter_name(self, parameter):
         """
@@ -128,6 +57,26 @@ class PipelineNode(object):
             node_name=self.name,
             parameter=parameter
         )
+
+    @abc.abstractmethod
+    def execute(self, input_data, **kwargs: dict):
+        """
+        Execute the algorithm this node implements on the given `input_data`.
+
+        The `kwargs` passed to this are the values sampled from the
+        `parameter_space` of this class.
+
+        This method has to return the result of the algorithm which will
+        get passed to the next node in the pipeline.
+
+        :param input_data: The input data to execute the algorithm on.
+        :type input_data: object
+        :param kwargs: The parameters to initialize the algorithm with.
+        :type kwargs: dict[str, object]
+        :return: The result of the algorithm
+        :rtype: object
+        """
+        raise NotImplementedError("Has to be implemented by subclasses")
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):

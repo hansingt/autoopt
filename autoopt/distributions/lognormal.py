@@ -38,16 +38,15 @@ class LogNormal(Normal):
     def mean(self):
         return np.exp(self.loc + self.scale ** 2 / 2)
 
-    def pdf(self, x):
+    def pdf(self, x: float):
         """
         Calculate the probability for the given `x` to be sampled.
 
         :param x: The value to calculate the probability for.
-        :type x: np.ndarray
         :return: The probability that the given value is sampled.
-        :rtype: np.ndarray
+        :rtype: float
         """
-        return np.vectorize(lambda x_: super(LogNormal, self).pdf(np.log(x_)) / x_ if x_ > 0 else 0.0)(x)
+        return super(LogNormal, self).pdf(np.log(x)) / x if x > 0 else 0.0
 
 
 class QLogNormal(LogNormal, QMixin):
@@ -59,12 +58,12 @@ class QLogNormal(LogNormal, QMixin):
 
     P(X) = 1 / sqrt(2 * pi * scale ** 2) * e ** (- (round(X / q) - loc) ** 2 / (2 * scale ** 2))
     """
-    def __init__(self, parameter_name, loc, scale, q=1.0):
-        super(QLogNormal, self).__init__(parameter_name=parameter_name, loc=loc, scale=scale)
+    def __init__(self, loc: float, scale: float, q: float):
+        super(QLogNormal, self).__init__(loc=loc, scale=scale)
         QMixin.__init__(self, q=q)
 
     def mean(self):
         return self.round_to_q(super(QLogNormal, self).mean())
 
-    def pdf(self, x):
+    def pdf(self, x: float):
         return super(QLogNormal, self).pdf(self.round_to_q(x))

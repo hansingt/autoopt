@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "51a9f1870dbf647b6d498c74789b5837269fa59075b49a7d97a471c2852ec062"
+            "sha256": "4f69c9264a17fac17e2a9aff5aa037a8187bd71f211aa24c4a52d702d656c722"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -143,10 +143,6 @@
                 "sha256:f0b870f674851ecbfbbbd364d6b5cbdff9dcedbc7f3f5e18a6891057f21fe399"
             ],
             "version": "==19.1.0"
-        },
-        "autoopt-test-fixture": {
-            "editable": true,
-            "path": "./fixtures"
         },
         "certifi": {
             "hashes": [

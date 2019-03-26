@@ -12,7 +12,7 @@ def create_dist(loc=None, scale=None, q=None):
     loc = loc if loc is not None else 0
     scale = scale if scale is not None else 1
     q = q if q is not None else 1
-    return QNormal("test", loc=loc, scale=scale, q=q)
+    return QNormal(loc=loc, scale=scale, q=q)
 
 
 def test_loc():
@@ -35,8 +35,11 @@ def test_pdf():
     start = dist.round_to_q(loc - 2 * scale)
     stop = dist.round_to_q(loc + 2 * scale)
     x = np.linspace(start=start, stop=stop, num=1000)
-    y = 1. / np.sqrt(2 * np.pi * scale ** 2) * np.exp(- (dist.round_to_q(x) - loc) ** 2 / (2 * scale ** 2))
-    assert all(y == dist.pdf(x))
+    y = np.vectorize(
+        lambda x_: 1. / np.sqrt(2 * np.pi * scale ** 2) * np.exp(- (dist.round_to_q(x_) - loc) ** 2 / (2 * scale ** 2))
+    )(x)
+    # noinspection PyTypeChecker
+    assert all(y == np.vectorize(dist.pdf)(x))
 
 
 def test_plot():
