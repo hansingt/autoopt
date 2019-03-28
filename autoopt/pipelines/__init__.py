@@ -3,3 +3,4 @@
 # Author: Torben Hansing
 #
 from .node import PipelineNode  # NOQA
+from .pipeline import Pipeline  # NOQA

@@ -4,33 +4,27 @@
 #
 import abc
 import logging
+from typing import Dict, Any
 
 from autoopt.distributions.base import Distribution
 
 
 class PipelineNode(object, metaclass=abc.ABCMeta):
 
-    def __init__(self, node_name):
-        """
-        Creates a new node for a pipeline using the given node name.
-
-        :param node_name: The name of the node to create a pipeline element for.
-        :type node_name: str
-        :return: A new pipeline element wrapping the given node.
-        :rtype: PipelineNode
-        """
-        self.__name = node_name
-        self.__class = None
-        self.__parameters = None
-        self.__optimization_parameters = None
-        self.__logger = logging.getLogger("AutoOpt.Nodes.%s" % node_name)
-
     @property
-    def name(self):
-        return self.__name
+    @abc.abstractmethod
+    def name(self) -> str:
+        """
+        Returns the name of this node.
+
+        Typically, this is the name of the algorithm implemented by this pipeline node.
+
+        :return: The name of this node
+        """
+        raise NotImplementedError("Has to be implemented by subclasses")
 
     @abc.abstractmethod
-    def parameter_space(self):
+    def parameter_space(self) -> Dict[str, Distribution]:
         """
         Returns a dictionary of all parameters of this node and their default values.
         If a parameter does not have a default, it is ignored and it is the responsibility of caller to ensure,
@@ -39,49 +33,60 @@ class PipelineNode(object, metaclass=abc.ABCMeta):
         only the default values are used as the space of the parameters.
 
         :return: A dictionary containing all parameters and their default values.
-        :rtype: dict[str, Distribution]
         """
         raise NotImplementedError("Has to be implemented by subclasses")
 
-    def _make_parameter_name(self, parameter):
+    @property
+    @abc.abstractmethod
+    def input_type(self) -> str:
         """
-        Creates an unique name for the given parameter.
-        This method uses the scheme __{node_name}_{parameter}__ to make each parameter a unique variable.
+        The data type this node requests the input to be in.
 
-        :param parameter: The name of the parameter to make unique
-        :type parameter: str
-        :return: A unique name for the given parameter.
-        :rtype: str
+        The data type can be any type, but it should be as general
+        as possible to make the node being usable in as many pipelines as possible.
+
+        :return: The data type of the input data
         """
-        return "{node_name}_{parameter}".format(
-            node_name=self.name,
-            parameter=parameter
-        )
+        raise NotImplementedError("Has to be implemented by subclasses")
+
+    @property
+    @abc.abstractmethod
+    def output_type(self) -> str:
+        """
+        The type of the data this node returns
+
+        The data type can be any type, but it should be as general
+        as possible to make the node being usable in as many pipelines as possible.
+
+        :return: The type of the output data
+        """
+        raise NotImplementedError("Has to be implemented by subclasses")
 
     @abc.abstractmethod
-    def execute(self, input_data, **kwargs: dict):
+    def execute(self, input_data: Any, **kwargs: Dict[str, Any]) -> Any:
         """
         Execute the algorithm this node implements on the given `input_data`.
+
+        The type of the input data is determined by the `input_data_type` property
+        and the pipeline generator assures, that these types match.
 
         The `kwargs` passed to this are the values sampled from the
         `parameter_space` of this class.
 
         This method has to return the result of the algorithm which will
-        get passed to the next node in the pipeline.
+        get passed to the next node in the pipeline. The type of the result
+        has to match the type defined by the `output_data_type` property.
 
         :param input_data: The input data to execute the algorithm on.
-        :type input_data: object
         :param kwargs: The parameters to initialize the algorithm with.
-        :type kwargs: dict[str, object]
         :return: The result of the algorithm
-        :rtype: object
         """
         raise NotImplementedError("Has to be implemented by subclasses")
 
-    def __eq__(self, other):
-        if isinstance(other, self.__class__):
+    def __eq__(self, other: Any) -> bool:
+        if isinstance(other, PipelineNode):
             return other.name == self.name
         return False
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(self.name)
