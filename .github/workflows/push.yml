@@ -6,11 +6,15 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: actions/cache@v2
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
+      - uses: actions/checkout@v2
       - name: Install pre-commit
         run: pip install pre-commit
       - name: Run pre-commit hooks
@@ -23,11 +27,11 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+      - uses: actions/checkout@v2
       - name: Install dependencies
         run: pip install tox tox-gh-actions
       - name: Run the tests
