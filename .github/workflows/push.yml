@@ -1,6 +1,6 @@
-name: Push
+name: Test
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   pre-commit:
@@ -39,5 +39,5 @@ jobs:
       - name: Combine the coverage data
         run: tox -e coverage
       - name: Upload coverage to CodeCov
-        if: ${{ matrix.os == ubuntu-latest && matrix.python-version == 3.9}}
         uses: codecov/codecov-action@v1
+        if: ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9' }}
