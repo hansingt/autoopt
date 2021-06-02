@@ -22,7 +22,11 @@ legacy_tox_ini = """
 [tox]
 isolated_build = true
 skip_missing_interpreters = true
-envlist = py37,py37-matplotlib,py38,py38-matplotlib,py39,py39-matplotlib,coverage
+envlist =
+    py37,py37-matplotlib,
+    py38,py38-matplotlib,
+    py39,py39-matplotlib,
+    coverage
 
 [testenv]
 deps =
@@ -38,7 +42,10 @@ commands =
 [testenv:coverage]
 deps =
     coverage[toml] ~= 5.5
-depends = py37,py38,py39
+depends =
+    py37,py37-matplotlib
+    py38,py38-matplotlib
+    py39,py39-matplotlib
 skip_install = true
 setenv =
     COVERAGE_FILE = .coverage
