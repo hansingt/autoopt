@@ -22,4 +22,5 @@ jobs:
           pipenv install --dev
       - name: Test with pytest
         run: pipenv run pytest --cov autoopt --cov-report term
-      
+      - name: Upload coverage to CodeCov
+        uses: codecov/codecov-action@v1
