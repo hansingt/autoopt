@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.com/Hansa064/autoopt.svg?branch=master)](https://travis-ci.com/Hansa064/autoopt)
-[![Coverage Status](https://coveralls.io/repos/github/Hansa064/autoopt/badge.svg?service=github)](https://coveralls.io/github/Hansa064/autoopt)
+[![CI](https://github.com/hansingt/autoopt/actions/workflows/ci.yml/badge.svg)](https://github.com/hansingt/autoopt)
+[![codecov](https://codecov.io/gh/hansingt/autoopt/branch/master/graph/badge.svg?token=W9YSMC5OTL)](https://codecov.io/gh/hansingt/autoopt)
 # AutoOpt
 TBD...
