@@ -58,5 +58,6 @@ setenv =
 commands =
     coverage combine
     coverage html -d {toxinidir}/htmlcov
+    coverage xml -o {toxinidir}/.coverage.xml
     coverage report
 """

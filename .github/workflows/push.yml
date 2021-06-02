@@ -38,6 +38,20 @@ jobs:
         run: tox
       - name: Combine the coverage data
         run: tox -e coverage
-      - name: Upload coverage to CodeCov
-        uses: codecov/codecov-action@v1
-        if: ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == '3.9' }}
+      - name: Upload the coverage reports
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-${{matrix.os}}-${{matrix.python-version}}
+          path: .coverage.xml
+
+  coverage:
+    runs-on: ubuntu-latest
+    if: ${{github.event_name == 'push'}}
+    steps:
+      - name: actions/download-artifact@v2
+        id: download
+      - uses: codecov/codecov-action@v1
+        with:
+          token: ${{secrets.CODECOV_TOKEN}}
+          files: ${{steps.download.outputs.download-path}}/.coverage.xml
+          fail_ci_if_error: true
