@@ -7,10 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.7
+      - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: 3.9
       - name: Install pre-commit
         run: pip install pre-commit
       - name: Run pre-commit hooks
@@ -32,6 +32,27 @@ jobs:
       - name: Run the tests
         env:
           TOX_ENV: py${{ matrix.python-version }}
-        run: tox -e $TOX_ENV
+        run: tox -e ${{ env.TOX_ENV }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: coverage-${{ env.TOX_ENV }}
+          path: .coverage.${{ env.TOX_ENV }}
+          retention-days: 1
+
+  coverage:
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: actions/download-artifact@v2
+        with:
+          path: .
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install dependencies
+        run: pip install coverage
+      - name: Combine the coverage files
+        run: coverage combine
       - name: Upload coverage to CodeCov
         uses: codecov/codecov-action@v1
