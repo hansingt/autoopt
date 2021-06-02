@@ -36,7 +36,7 @@ jobs:
         run: tox -e coverage
       - uses: actions/upload-artifact@v2
         with:
-          name: .coverage-${{ matrix.os }}-${{ matrix.python-version }}
+          name: coverage-${{ matrix.os }}-${{ matrix.python-version }}
           path: .coverage
           retention-days: 1
 
@@ -50,10 +50,10 @@ jobs:
           python-version: 3.9
       - name: Install dependencies
         run: pip install coverage
+      - uses: actions/checkout@v2
       - uses: actions/download-artifact@v2
-      - name: List files
-        run: ls -la
-      - name: Combine the coverage files
-        run: coverage combine
+        with:
+          name: .coverage.ubuntu-latest-3.9
+          path: ./.coverage
       - name: Upload coverage to CodeCov
         uses: codecov/codecov-action@v1
