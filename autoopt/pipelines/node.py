@@ -2,14 +2,26 @@
 # -*- coding: UTF-8 -*-
 # Author: Torben Hansing
 #
+"""
+This module implements a single node in a processing pipeline.
+
+A pipeline node is a processing alorithm together with it's
+input and output type and the parameter space which can be used
+to optimize the algorithm.
+"""
 import abc
-import logging
 from typing import Dict, Any
 
 from autoopt.distributions.base import Distribution
 
 
-class PipelineNode(object, metaclass=abc.ABCMeta):
+class PipelineNode(metaclass=abc.ABCMeta):
+    """
+    The abstract base class to implement nodes in processing pipelines.
+
+    This class can be used as inheritence base class for addons to implement
+    processing pipeline nodes for the different machine learning frameworks.
+    """
 
     @property
     @abc.abstractmethod
@@ -27,10 +39,10 @@ class PipelineNode(object, metaclass=abc.ABCMeta):
     def parameter_space(self) -> Dict[str, Distribution]:
         """
         Returns a dictionary of all parameters of this node and their default values.
-        If a parameter does not have a default, it is ignored and it is the responsibility of caller to ensure,
-        that this parameter get's a value.
-        This property should be overwritten in subclasses to create a real space from it, otherwise
-        only the default values are used as the space of the parameters.
+        If a parameter does not have a default, it is ignored and it is the
+        responsibility of caller to ensure, that this parameter get's a value.
+        This property should be overwritten in subclasses to create a real space from
+        it, otherwise only the default values are used as the space of the parameters.
 
         :return: A dictionary containing all parameters and their default values.
         """

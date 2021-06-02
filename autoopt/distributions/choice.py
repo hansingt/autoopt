@@ -2,14 +2,14 @@
 This module implements the different choice distributions.
 
 A choice distribution is defined by a discrete target variable X, that can only take
-some specified values (e.g. a list of strings). There are two different distributions defined in this module:
+some specified values (e.g. a list of strings).
+
+There are two different distributions defined in this module:
 
     1. The "Choice"-Distribution defines an equal probability to each value.
     2. The "PChoice"-Distribution allows the user to weight each value differently.
 """
-import logging
-
-from autoopt.distributions.base import Distribution
+from .base import Distribution, _get_matplotlib
 
 
 class WeightedChoice(Distribution):
@@ -55,22 +55,29 @@ class WeightedChoice(Distribution):
         return self.__choices.copy()
 
     def mean(self):
-        probabilities = [weight / self.__weight_sum for weight in self.__choices.values()]
+        probabilities = [
+            weight / self.__weight_sum for weight in self.__choices.values()
+        ]
         average = sum([i * prob for i, prob in enumerate(probabilities)])
         return list(self.__choices.keys())[int(round(average))]
 
     def pdf(self, x: object):
         if x not in self.__choices:
             return 0.0
-        else:
-            return self.__choices[x] / self.__weight_sum
+        return self.__choices[x] / self.__weight_sum
+
+    def _plot_min_value(self) -> float:  # pragma: no cover
+        return 0.0
+
+    def _plot_max_value(self) -> float:  # pragma: no cover
+        return len(self.__choices)
+
+    def _plot_label(self) -> str:  # pragma: no cover
+        return ""
 
     def plot(self):
-        try:
-            from matplotlib import pyplot as plt
-        except ImportError:  # pragma: no cover
-            logging.getLogger().error("Error importing the matplotlib. "
-                                      "Did you forget to install the 'plotting' extra?")
+        plt = _get_matplotlib()
+        if plt is None:
             return None
         figure = plt.figure()
         plt.ylabel("PDF(X)")
@@ -99,4 +106,4 @@ class Choice(WeightedChoice):
         :param choices: The possible values for this parameter.
         :type choices: List[object]
         """
-        super(Choice, self).__init__(choices={c: 1 for c in choices})
+        super().__init__(choices={c: 1 for c in choices})

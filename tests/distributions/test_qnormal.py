@@ -36,7 +36,9 @@ def test_pdf():
     stop = dist.round_to_q(loc + 2 * scale)
     x = np.linspace(start=start, stop=stop, num=1000)
     y = np.vectorize(
-        lambda x_: 1. / np.sqrt(2 * np.pi * scale ** 2) * np.exp(- (dist.round_to_q(x_) - loc) ** 2 / (2 * scale ** 2))
+        lambda x_: 1.0
+        / np.sqrt(2 * np.pi * scale ** 2)
+        * np.exp(-((dist.round_to_q(x_) - loc) ** 2) / (2 * scale ** 2))
     )(x)
     # noinspection PyTypeChecker
     assert all(y == np.vectorize(dist.pdf)(x))
@@ -49,6 +51,7 @@ def test_plot():
     plot = dist.plot()
     try:
         from matplotlib import pyplot as plt
+
         assert isinstance(plot, plt.figure().__class__)
     except ImportError:
         assert plot is None

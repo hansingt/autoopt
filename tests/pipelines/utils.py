@@ -5,7 +5,9 @@
 from autoopt.pipelines import PipelineNode
 
 
-def create_node(name=None, input_type=None, output_type=None, space=None, with_execute=False):
+def create_node(
+    name=None, input_type=None, output_type=None, space=None, with_execute=False
+):
     class Node(PipelineNode):
         @property
         def name(self):
@@ -34,6 +36,5 @@ def create_node(name=None, input_type=None, output_type=None, space=None, with_e
             if not with_execute:
                 return super(Node, self).execute(input_data, **kwargs)
             return input_data
+
     return Node()
-
-

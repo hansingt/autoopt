@@ -1,16 +1,18 @@
-import numpy as np
 import random
 import unittest
+import pytest
 from autoopt.distributions import WeightedChoice, Choice
+from autoopt.distributions.base import _get_matplotlib
 
 
 class WeightedChoiceTestCase(unittest.TestCase):
-
     @staticmethod
     def _create_choices():
         choices = set()
         for i in range(random.randint(1, 10)):
-            choices.add("".join([chr(random.randint(ord("A"), ord("Z"))) for _ in range(5)]))
+            choices.add(
+                "".join([chr(random.randint(ord("A"), ord("Z"))) for _ in range(5)])
+            )
         return {c: random.randint(1, 100) for c in choices}
 
     def setUp(self):
@@ -38,20 +40,26 @@ class WeightedChoiceTestCase(unittest.TestCase):
     def test_pdf_not_in(self):
         self.assertEqual(self.dist.pdf("__not_in_set__"), 0.0)
 
+    @pytest.mark.skipif(_get_matplotlib() is None, reason="No matplotlib installed")
     def test_plot(self):
         try:
             import matplotlib
+
             matplotlib.use("AGG")
             from matplotlib import pyplot as plt
+
             plt.ioff()
             plot = self.dist.plot()
             self.assertIsInstance(plot, plt.figure().__class__)
         except ImportError:
             pass
 
+    @pytest.mark.skipif(_get_matplotlib() is not None, reason="matplotlib installed")
+    def test_plot_no_matplotlib(self):
+        self.assertIsNone(self.dist.plot())
+
 
 class ChoiceTestCase(unittest.TestCase):
-
     def test_choice(self):
         choices = ["a", "b", "c"]
         dist = Choice(choices=choices)

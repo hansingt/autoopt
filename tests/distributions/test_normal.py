@@ -31,7 +31,11 @@ def test_pdf():
     scale = 1.0
     dist = create_dist(loc=loc, scale=scale)
     x = np.linspace(start=loc - 2 * scale, stop=loc + 2 * scale, num=1000)
-    y = 1. / np.sqrt(2 * np.pi * scale ** 2) * np.exp(- (x - loc) ** 2 / (2 * scale ** 2))
+    y = (
+        1.0
+        / np.sqrt(2 * np.pi * scale ** 2)
+        * np.exp(-((x - loc) ** 2) / (2 * scale ** 2))
+    )
     assert np.allclose(y, np.vectorize(dist.pdf)(x))
 
 
@@ -42,6 +46,7 @@ def test_plot():
     plot = dist.plot()
     try:
         from matplotlib import pyplot as plt
+
         assert isinstance(plot, plt.figure().__class__)
     except ImportError:
         assert plot is None
