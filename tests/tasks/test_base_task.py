@@ -3,7 +3,7 @@
 # Author: Torben Hansing
 #
 import os
-import pickle
+import pickle  # nosec
 
 from autoopt.tasks import BaseTask
 
@@ -29,6 +29,6 @@ def test_BaseTask_optimizer():
 def test_pickle_BaseTask():
     task = create_bas_task()
     task_pickle = pickle.dumps(task)
-    check_task = pickle.loads(task_pickle)
+    check_task = pickle.loads(task_pickle)  # nosec
     assert task.input_path == check_task.input_path
     assert task.optimizer == check_task.optimizer

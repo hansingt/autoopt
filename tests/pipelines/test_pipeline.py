@@ -30,15 +30,27 @@ class TestEmptyPipeline(unittest.TestCase):
 class TestPipelineWithNodes(unittest.TestCase):
     def setUp(self):
         self.nodes = [
-            create_node(name="one", input_type="in", output_type="one_out", space={
-                "param": Choice(choices=[True, False])
-            }, with_execute=True),
-            create_node(name="two", input_type="one_out", output_type="two_out", space={
-                "param": Choice(choices=[True, False])
-            }, with_execute=True),
-            create_node(name="three", input_type="two_out", output_type="out", space={
-                "param": Choice(choices=[True, False])
-            }, with_execute=True),
+            create_node(
+                name="one",
+                input_type="in",
+                output_type="one_out",
+                space={"param": Choice(choices=[True, False])},
+                with_execute=True,
+            ),
+            create_node(
+                name="two",
+                input_type="one_out",
+                output_type="two_out",
+                space={"param": Choice(choices=[True, False])},
+                with_execute=True,
+            ),
+            create_node(
+                name="three",
+                input_type="two_out",
+                output_type="out",
+                space={"param": Choice(choices=[True, False])},
+                with_execute=True,
+            ),
         ]
         self.pipeline = Pipeline()
         for node in self.nodes:

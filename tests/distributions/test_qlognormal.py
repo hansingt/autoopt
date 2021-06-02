@@ -38,7 +38,11 @@ def test_pdf():
         if x_ <= 0:
             return 0.0
         else:
-            return 1. / (np.sqrt(2 * np.pi) * scale * x_) * np.exp(-(np.log(x_) - loc) ** 2 / (2 * scale ** 2))
+            return (
+                1.0
+                / (np.sqrt(2 * np.pi) * scale * x_)
+                * np.exp(-((np.log(x_) - loc) ** 2) / (2 * scale ** 2))
+            )
 
     start = dist.mean() - 2 * scale
     stop = dist.mean() + 2 * scale
@@ -54,6 +58,7 @@ def test_plot():
     plot = dist.plot()
     try:
         from matplotlib import pyplot as plt
+
         assert isinstance(plot, plt.figure().__class__)
     except ImportError:
         assert plot is None

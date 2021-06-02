@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools >= 42", "wheel", "setuptools-scm[toml] >= 3.4"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
+
+[tool.black]
+line-length = 88
+target-version = ["py37", "py38", "py39"]
+
+[tool.pylint.'MESSAGES CONTROL']
+disable=""",
+    import-outside-toplevel,
+    invalid-name,
+"""
+
+[tool.coverage.run]
+source = ["autoopt"]
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+isolated_build = true
+skip_missing_interpreters = true
+envlist =
+    py37,py37-matplotlib,
+    py38,py38-matplotlib,
+    py39,py39-matplotlib,
+    coverage
+
+[gh-actions]
+python =
+    3.7: py37,py37-matplotlib
+    3.8: py38,py38-matplotlib
+    3.9: py39,py39-matplotlib
+
+[testenv]
+deps =
+    pytest ~= 6.2
+    coverage[toml] ~= 5.5
+    matplotlib: matplotlib ~= 3.4
+setenv =
+    COVERAGE_FILE = .coverage.{envname}
+commands =
+    coverage erase
+    coverage run -m pytest
+
+[testenv:coverage]
+deps =
+    coverage[toml] ~= 5.5
+depends =
+    py37,py37-matplotlib
+    py38,py38-matplotlib
+    py39,py39-matplotlib
+skip_install = true
+setenv =
+    COVERAGE_FILE = .coverage
+commands =
+    coverage combine
+    coverage html -d {toxinidir}/htmlcov
+    coverage xml -o {toxinidir}/.coverage.xml
+    coverage report
+"""

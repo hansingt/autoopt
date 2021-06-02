@@ -2,13 +2,38 @@
 # -*- coding: UTF-8 -*-
 # Author: Torben Hansing
 #
+"""
+This module implements a processing pipeline.
+
+These pipelines contain different nodes which have
+an input and output type and a processing algorithm to
+convert data from the input into the output format.
+The input of each node must match the ouput of the previous node.
+
+These pipelines can then be executed to process the input data
+and calculate a loss. This loss will then be used to optimize the
+parameters of the algorithms in the pipeline.
+"""
 from typing import Dict, Any
 
 from autoopt.distributions.base import Distribution
 from .node import PipelineNode
 
 
-class Pipeline(object):
+class Pipeline:
+    """
+    Implements a processing pipeline.
+
+    It contains different nodes which have an input and output type
+    and a processing algorithm to convert data from the input into
+    the output format.
+    The input of each node must match the ouput of the previous node.
+
+    It can then be executed to process the input data and calculate
+    a loss. This loss will then be used to optimize the parameters
+    of the algorithms in this pipeline.
+    """
+
     def __init__(self):
         self.__nodes = list()
 
@@ -25,9 +50,9 @@ class Pipeline(object):
         """
         if self.output_type != "Any" and self.output_type != node.input_type:
             raise ValueError(
-                "Can't add node '%s': The input types don't match. Expected '%s' but got '%s'" % (
-                    node.name, self.output_type, node.input_type
-                )
+                "Can't add node '%s': "
+                "The input types don't match. Expected '%s' but got '%s'"
+                % (node.name, self.output_type, node.input_type)
             )
         self.__nodes.append(node)
 

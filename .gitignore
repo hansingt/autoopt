@@ -2,6 +2,9 @@
 *.py[cod]
 __pycache__
 
+# Tox envs
+.tox/
+
 # Distribution files
 *.egg-info
 dist/*
