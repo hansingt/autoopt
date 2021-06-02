@@ -38,26 +38,6 @@ jobs:
         run: tox
       - name: Combine the coverage data
         run: tox -e coverage
-      - uses: actions/upload-artifact@v2
-        with:
-          name: coverage-${{ matrix.os }}-${{ matrix.python-version }}
-          path: .coverage
-          retention-days: 1
-
-  coverage:
-    runs-on: ubuntu-latest
-    needs: [test]
-    steps:
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.9
-      - name: Install dependencies
-        run: pip install coverage
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v2
-        with:
-          name: .coverage.ubuntu-latest-3.9
-          path: ./.coverage
       - name: Upload coverage to CodeCov
+        if: ${{ matrix.os == ubuntu-latest && matrix.python-version == 3.9}}
         uses: codecov/codecov-action@v1
