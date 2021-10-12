@@ -119,7 +119,7 @@ class Distribution:
             ymax=y_max,
             linestyle="--",
             color=axes[0].get_color(),
-            label="Mean: %g" % mean_x,
+            label=f"Mean: {mean_x:g}",
         )
         legend = plt.legend(loc="best", fancybox=True, framealpha=0.2)
         legend.set_draggable(True)

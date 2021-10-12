@@ -22,8 +22,8 @@ class Uniform(Distribution):
     def __init__(self, min_value: float, max_value: float):
         if min_value >= max_value:
             raise ValueError(
-                "The minimum value has to be smaller than the maximum value %g >= %g"
-                % (min_value, max_value)
+                "The minimum value has to be smaller than the maximum value "
+                f"{min_value:g} >= {max_value:g}"
             )
         self._min_value = min_value
         self._max_value = max_value
@@ -90,8 +90,4 @@ class QUniform(Uniform, QMixin):
         return self.round_to_q(self.max_value) + 2 * self.q
 
     def _plot_label(self):
-        return "min={min_value:g}, max={max_value:g}, q={q:g}".format(
-            min_value=self.min_value,
-            max_value=self.max_value,
-            q=self.q,
-        )
+        return f"min={self.min_value:g}, max={self.max_value:g}, q={self.q:g}"

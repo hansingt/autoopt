@@ -35,7 +35,7 @@ class Pipeline:
     """
 
     def __init__(self):
-        self.__nodes = list()
+        self.__nodes = []
 
     def add_node(self, node: PipelineNode):
         """
@@ -48,11 +48,11 @@ class Pipeline:
 
         :param node: The node to add to this pipeline.
         """
-        if self.output_type != "Any" and self.output_type != node.input_type:
+        if self.output_type not in ("Any", node.input_type):
             raise ValueError(
-                "Can't add node '%s': "
-                "The input types don't match. Expected '%s' but got '%s'"
-                % (node.name, self.output_type, node.input_type)
+                f"Can't add node '{node.name}': "
+                "The input types don't match. "
+                f"Expected '{self.output_type}' but got '{node.input_type}'"
             )
         self.__nodes.append(node)
 
