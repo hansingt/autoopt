@@ -62,7 +62,7 @@ class Normal(Distribution):
         :param x: The value to calculate the probability for.
         :return: The probability that the given value is sampled.
         """
-        return np.exp(-((x - self.loc) ** 2) / (2 * self.scale ** 2)) / (
+        return np.exp(-((x - self.loc) ** 2) / (2 * self.scale**2)) / (
             np.sqrt(2 * np.pi) * self.scale
         )
 

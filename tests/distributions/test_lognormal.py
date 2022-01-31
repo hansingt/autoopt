@@ -39,7 +39,7 @@ def test_pdf():
             return (
                 1.0
                 / (np.sqrt(2 * np.pi) * scale * x_)
-                * np.exp(-((np.log(x_) - loc) ** 2) / (2 * scale ** 2))
+                * np.exp(-((np.log(x_) - loc) ** 2) / (2 * scale**2))
             )
 
     x = np.linspace(

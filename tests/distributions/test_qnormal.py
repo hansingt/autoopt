@@ -37,8 +37,8 @@ def test_pdf():
     x = np.linspace(start=start, stop=stop, num=1000)
     y = np.vectorize(
         lambda x_: 1.0
-        / np.sqrt(2 * np.pi * scale ** 2)
-        * np.exp(-((dist.round_to_q(x_) - loc) ** 2) / (2 * scale ** 2))
+        / np.sqrt(2 * np.pi * scale**2)
+        * np.exp(-((dist.round_to_q(x_) - loc) ** 2) / (2 * scale**2))
     )(x)
     # noinspection PyTypeChecker
     assert all(y == np.vectorize(dist.pdf)(x))
