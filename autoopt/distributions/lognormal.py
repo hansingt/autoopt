@@ -39,7 +39,7 @@ class LogNormal(Normal):
     """
 
     def mean(self):
-        return np.exp(self.loc + self.scale ** 2 / 2)
+        return np.exp(self.loc + self.scale**2 / 2)
 
     def pdf(self, x: float):
         """

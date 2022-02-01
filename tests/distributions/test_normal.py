@@ -33,8 +33,8 @@ def test_pdf():
     x = np.linspace(start=loc - 2 * scale, stop=loc + 2 * scale, num=1000)
     y = (
         1.0
-        / np.sqrt(2 * np.pi * scale ** 2)
-        * np.exp(-((x - loc) ** 2) / (2 * scale ** 2))
+        / np.sqrt(2 * np.pi * scale**2)
+        * np.exp(-((x - loc) ** 2) / (2 * scale**2))
     )
     assert np.allclose(y, np.vectorize(dist.pdf)(x))
 

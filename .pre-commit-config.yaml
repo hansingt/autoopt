@@ -3,7 +3,7 @@
 repos:
   # Python checkers
   - repo: https://github.com/psf/black
-    rev: 21.12b0
+    rev: 22.1.0
     hooks:
       - id: black
   - repo: https://github.com/PyCQA/flake8
@@ -17,7 +17,7 @@ repos:
         additional_dependencies: [numpy ~= 1.20]
         exclude: (tests/.*)
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.1
+    rev: 1.7.2
     hooks:
       - id: bandit
         args: ["--ini=.bandit", "--quiet", "--format=custom"]
