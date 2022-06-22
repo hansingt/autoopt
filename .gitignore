@@ -3,16 +3,17 @@
 __pycache__
 
 # Tox envs
-.tox/
+/.tox/
 
 # Distribution files
 *.egg-info
-dist/*
+/build/
+/dist/
 
 # Coverage and test files
 .coverage*
 .pytest_cache/
-htmlcov/
+/htmlcov/
 
 # PyCharm IDE
-.idea/*
+/.idea/
