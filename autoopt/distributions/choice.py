@@ -58,7 +58,7 @@ class WeightedChoice(Distribution):
         probabilities = [
             weight / self.__weight_sum for weight in self.__choices.values()
         ]
-        average = sum([i * prob for i, prob in enumerate(probabilities)])
+        average = sum(i * prob for i, prob in enumerate(probabilities))
         return list(self.__choices.keys())[int(round(average))]
 
     def pdf(self, x: object):
