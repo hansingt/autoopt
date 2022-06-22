@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.black]
 line-length = 88
-target-version = ["py37", "py38", "py39"]
+target-version = ["py37", "py38", "py39", "py310"]
 
 [tool.pylint.'MESSAGES CONTROL']
 disable=""",
@@ -26,6 +26,7 @@ envlist =
     py37,py37-matplotlib,
     py38,py38-matplotlib,
     py39,py39-matplotlib,
+    py310,py310-matplotlib,
     coverage
 
 [gh-actions]
@@ -33,6 +34,7 @@ python =
     3.7: py37,py37-matplotlib
     3.8: py38,py38-matplotlib
     3.9: py39,py39-matplotlib
+    3.10: py310,py310-matplotlib
 
 [testenv]
 deps =
@@ -52,6 +54,7 @@ depends =
     py37,py37-matplotlib
     py38,py38-matplotlib
     py39,py39-matplotlib
+    py310,py310-matplotlib
 skip_install = true
 setenv =
     COVERAGE_FILE = .coverage
