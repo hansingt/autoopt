@@ -13,12 +13,11 @@ jobs:
       OS: ${{matrix.os}}
       PYTHON: ${{matrix.python-version}}
     steps:
+      - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-          cache: "pip"
-      - uses: actions/checkout@v2
       - name: Install dependencies
         run: pip install poetry tox tox-gh-actions
       - name: Run the tests
