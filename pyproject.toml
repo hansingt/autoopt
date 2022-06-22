@@ -36,9 +36,9 @@ python =
 
 [testenv]
 deps =
-    pytest ~= 6.2
-    coverage[toml] ~= 5.5
-    matplotlib: matplotlib ~= 3.4
+    pytest
+    coverage[toml]
+    matplotlib: matplotlib
 setenv =
     COVERAGE_FILE = .coverage.{envname}
 commands =
@@ -47,7 +47,7 @@ commands =
 
 [testenv:coverage]
 deps =
-    coverage[toml] ~= 5.5
+    coverage[toml]
 depends =
     py37,py37-matplotlib
     py38,py38-matplotlib
