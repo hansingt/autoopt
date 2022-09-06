@@ -3,15 +3,15 @@
 repos:
   # Python checkers
   - repo: https://github.com/psf/black
-    rev: 22.3.0
+    rev: 22.8.0
     hooks:
       - id: black
   - repo: https://github.com/PyCQA/flake8
-    rev: 4.0.1
+    rev: 5.0.4
     hooks:
       - id: flake8
   - repo: https://github.com/PyCQA/pylint
-    rev: v2.14.3
+    rev: v2.15.0
     hooks:
       - id: pylint
         additional_dependencies: [numpy ~= 1.20]
