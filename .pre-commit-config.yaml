@@ -3,15 +3,15 @@
 repos:
   # Python checkers
   - repo: https://github.com/psf/black
-    rev: 22.8.0
+    rev: 22.10.0
     hooks:
       - id: black
   - repo: https://github.com/PyCQA/flake8
-    rev: 5.0.4
+    rev: 6.0.0
     hooks:
       - id: flake8
   - repo: https://github.com/PyCQA/pylint
-    rev: v2.15.0
+    rev: v2.15.6
     hooks:
       - id: pylint
         additional_dependencies: [numpy ~= 1.20]
@@ -23,7 +23,7 @@ repos:
         args: ["--ini=.bandit", "--quiet", "--format=custom"]
   # file format checkers
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.3.0
+    rev: v4.4.0
     hooks:
       - id: end-of-file-fixer
       - id: mixed-line-ending
