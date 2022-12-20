@@ -20,14 +20,14 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
     "Topic :: Scientific/Engineering",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Scientific/Engineering :: Information Analysis",
 ]
 dependencies = ["numpy"]
 dynamic = ["version"]
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 
 [project.urls]
 homepage = "https://github.com/hansingt/autoopt"
@@ -35,9 +35,7 @@ repository = "https://github.com/hansingt/autoopt"
 issues = "https://github.com/hansingt/autoopt/issues"
 
 [project.optional-dependencies]
-plotting = [
-    "matplotlib",
-]
+plotting = ["matplotlib"]
 
 [tool.setuptools]
 packages = ["autoopt"]
@@ -48,7 +46,7 @@ platforms = ["any"]
 
 [tool.black]
 line-length = 88
-target-version = ["py37", "py38", "py39", "py310"]
+target-version = ["py38", "py39", "py310", "py311"]
 
 [tool.pylint.'MESSAGES CONTROL']
 disable=""",
