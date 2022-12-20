@@ -2,11 +2,51 @@
 requires = ["setuptools >= 42", "wheel", "setuptools-scm[toml] >= 3.4"]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "AutoOpt"
+description = "Framework to automatically find and optimize the best processing pipeline for a given dataset"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [{name = "Torben Hansing"}]
+keywords = []
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Education",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
+dependencies = ["numpy"]
+dynamic = ["version"]
+requires-python = ">=3.8"
+
+[project.urls]
+homepage = "https://github.com/hansingt/autoopt"
+repository = "https://github.com/hansingt/autoopt"
+issues = "https://github.com/hansingt/autoopt/issues"
+
+[project.optional-dependencies]
+plotting = ["matplotlib"]
+
+[tool.setuptools]
+packages = ["autoopt"]
+platforms = ["any"]
+
+
 [tool.setuptools_scm]
 
 [tool.black]
 line-length = 88
-target-version = ["py37", "py38", "py39", "py310"]
+target-version = ["py38", "py39", "py310", "py311"]
 
 [tool.pylint.'MESSAGES CONTROL']
 disable=""",
@@ -16,51 +56,3 @@ disable=""",
 
 [tool.coverage.run]
 source = ["autoopt"]
-
-[tool.tox]
-legacy_tox_ini = """
-[tox]
-isolated_build = true
-skip_missing_interpreters = true
-envlist =
-    py37,py37-matplotlib,
-    py38,py38-matplotlib,
-    py39,py39-matplotlib,
-    py310,py310-matplotlib,
-    coverage
-
-[gh-actions]
-python =
-    3.7: py37,py37-matplotlib
-    3.8: py38,py38-matplotlib
-    3.9: py39,py39-matplotlib
-    3.10: py310,py310-matplotlib
-
-[testenv]
-deps =
-    pytest
-    coverage[toml]
-    matplotlib: matplotlib
-setenv =
-    COVERAGE_FILE = .coverage.{envname}
-commands =
-    coverage erase
-    coverage run -m pytest
-
-[testenv:coverage]
-deps =
-    coverage[toml]
-depends =
-    py37,py37-matplotlib
-    py38,py38-matplotlib
-    py39,py39-matplotlib
-    py310,py310-matplotlib
-skip_install = true
-setenv =
-    COVERAGE_FILE = .coverage
-commands =
-    coverage combine
-    coverage html -d {toxinidir}/htmlcov
-    coverage xml -o {toxinidir}/.coverage.xml
-    coverage report
-"""
